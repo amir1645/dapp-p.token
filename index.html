@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PToken DApp</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- هدر زیبا -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon animated-logo">
+            <i class="fas fa-coins"></i>
+          </div>
+          <div class="logo-text">
+            <h1>PToken DApp</h1>
+            <span class="logo-subtitle">Polygon Network</span>
+          </div>
+        </div>
+        <div class="network-status">
+          <div class="status-indicator">
+            <div class="pulse-dot"></div>
+            <span>آنلاین</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- تب‌های اصلی -->
+    <nav class="main-tabs">
+      <div class="tab active" data-tab="wallet">
+        <div class="tab-icon">
+          <i class="fas fa-wallet"></i>
+        </div>
+        <span class="tab-label">کیف پول</span>
+        <div class="tab-indicator"></div>
+      </div>
+      <div class="tab" data-tab="profile">
+        <div class="tab-icon">
+          <i class="fas fa-user"></i>
+        </div>
+        <span class="tab-label">پروفایل</span>
+        <div class="tab-indicator"></div>
+      </div>
+      <div class="tab" data-tab="tree">
+        <div class="tab-icon">
+          <i class="fas fa-sitemap"></i>
+        </div>
+        <span class="tab-label">شبکه درختی</span>
+        <div class="tab-indicator"></div>
+      </div>
+      <div class="tab" data-tab="miner">
+        <div class="tab-icon">
+          <i class="fas fa-hard-hat"></i>
+        </div>
+        <span class="tab-label">سیستم ماینر</span>
+        <div class="tab-indicator"></div>
+      </div>
+      <div class="tab" data-tab="withdraw">
+        <div class="tab-icon">
+          <i class="fas fa-money-bill-wave"></i>
+        </div>
+        <span class="tab-label">برداشت سود</span>
+        <div class="tab-indicator"></div>
+      </div>
+    </nav>
+
+    <!-- محتوای تب‌ها -->
+    <main class="main-content">
+      
+      <!-- تب کیف پول -->
+      <div id="wallet-tab" class="tab-content active">
+        <div class="content-section">
+          <div class="section-header animated-header">
+            <h2><i class="fas fa-wallet"></i> اتصال کیف پول</h2>
+            <p>برای شروع کار در پلتفرم PToken، کیف پول خود را متصل کنید</p>
+          </div>
+
+          <div class="connection-card">
+            <div class="connection-visual">
+              <div class="floating-wallet">
+                <i class="fas fa-wallet"></i>
+              </div>
+              <div class="connection-rays">
+                <div class="ray ray-1"></div>
+                <div class="ray ray-2"></div>
+                <div class="ray ray-3"></div>
+              </div>
+            </div>
+
+            <button id="connect-btn" onclick="connectWallet()" class="btn-connect pulse-glow">
+              <div class="btn-content">
+                <i class="fas fa-plug"></i>
+                <span>اتصال به MetaMask</span>
+              </div>
+              <div class="btn-shine"></div>
+            </button>
+
+            <button id="disconnect-btn" onclick="disconnectWallet()" class="btn-disconnect" style="display: none;">
+              <i class="fas fa-power-off"></i>
+              قطع اتصال
+            </button>
+          </div>
+
+          <div id="account-info" class="account-info" style="display: none;">
+            <div class="info-card success-card">
+              <div class="card-header">
+                <i class="fas fa-check-circle"></i>
+                <h3>اتصال موفق</h3>
+              </div>
+              <div class="account-details">
+                <div class="detail-item">
+                  <span class="detail-label">آدرس کیف پول:</span>
+                  <span class="detail-value" id="wallet-address"></span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">موجودی:</span>
+                  <span class="detail-value" id="wallet-balance">0 MATIC</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">شبکه:</span>
+                  <span class="detail-value">Polygon Mainnet</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- تب پروفایل -->
+      <div id="profile-tab" class="tab-content">
+        <div class="content-section">
+          <div class="section-header">
+            <h2><i class="fas fa-user-circle"></i> پروفایل کاربری</h2>
+            <p>اطلاعات کامل حساب و شبکه شما</p>
+          </div>
+
+          <!-- بخش ثبت‌نام برای کاربران جدید -->
+          <div id="registration-section" class="registration-section" style="display: none;">
+            <div class="info-card primary-card">
+              <div class="card-header">
+                <i class="fas fa-user-plus"></i>
+                <h3>ثبت‌نام جدید در شبکه</h3>
+                <div class="price-badge">350 MATIC</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="input-label">
+                  <i class="fas fa-user-friends"></i>
+                  شناسه کاربر آپلاین
+                </label>
+                <input id="upline-address" type="number" placeholder="مثال: ۱۲۳۴" class="modern-input">
+              </div>
+
+              <div class="position-selector">
+                <div class="selector-title">انتخاب موقعیت در شبکه</div>
+                <div class="position-options">
+                  <label class="position-option">
+                    <input type="radio" name="place" value="left" checked>
+                    <div class="option-content">
+                      <div class="option-icon left">
+                        <i class="fas fa-arrow-left"></i>
+                      </div>
+                      <span>سمت چپ</span>
+                    </div>
+                  </label>
+                  <label class="position-option">
+                    <input type="radio" name="place" value="right">
+                    <div class="option-content">
+                      <div class="option-icon right">
+                        <i class="fas fa-arrow-right"></i>
+                      </div>
+                      <span>سمت راست</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <button onclick="register()" class="btn-primary full-width">
+                <i class="fas fa-user-check"></i>
+                تکمیل ثبت‌نام
+              </button>
+            </div>
+          </div>
+
+          <!-- پروفایل کاربر ثبت‌نام کرده -->
+          <div id="user-profile" class="user-profile-section" style="display: none;">
+            <!-- کارت اطلاعات کاربر -->
+            <div class="info-card profile-card">
+              <div class="profile-header">
+                <div class="avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-info">
+                  <h3>کاربر شماره <span id="profile-user-id" class="user-id">-</span></h3>
+                  <p>آپلاین: کاربر شماره <span id="profile-upline-id">-</span></p>
+                </div>
+                <div class="profile-badge" id="miner-profile-badge">
+                  <i class="fas fa-hard-hat"></i>
+                  <span>ماینر</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- آمار شبکه -->
+            <div class="stats-grid">
+              <div class="stat-card network-stat">
+                <div class="stat-icon left">
+                  <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-value" id="left-count">0</div>
+                  <div class="stat-label">تعداد سمت چپ</div>
+                </div>
+                <div class="stat-graph">
+                  <div class="graph-bar" id="left-bar"></div>
+                </div>
+              </div>
+
+              <div class="stat-card network-stat">
+                <div class="stat-icon right">
+                  <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-value" id="right-count">0</div>
+                  <div class="stat-label">تعداد سمت راست</div>
+                </div>
+                <div class="stat-graph">
+                  <div class="graph-bar" id="right-bar"></div>
+                </div>
+              </div>
+
+              <div class="stat-card total-stat">
+                <div class="stat-icon total">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-value" id="total-count">0</div>
+                  <div class="stat-label">کل زیرمجموعه</div>
+                </div>
+                <div class="stat-trend">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- آمار مالی -->
+            <div class="finance-stats">
+              <div class="stat-card finance-stat">
+                <div class="stat-icon balance">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-value" id="balance-count">0</div>
+                  <div class="stat-label">تعادل خورده</div>
+                  <div class="stat-progress">
+                    <div class="progress-bar">
+                      <div class="progress-fill" id="balance-progress"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="stat-card finance-stat">
+                <div class="stat-icon saved">
+                  <i class="fas fa-piggy-bank"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-value" id="saved-balance-count">0</div>
+                  <div class="stat-label">تعادل ذخیره شده</div>
+                  <div class="stat-badge" id="saved-badge">ذخیره شده</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- آمار کلی -->
+          <div class="overview-stats">
+            <h3 class="section-subtitle">آمار کلی</h3>
+            <div class="overview-grid">
+              <div class="overview-item">
+                <div class="overview-icon">
+                  <i class="fas fa-id-card"></i>
+                </div>
+                <div class="overview-content">
+                  <div class="overview-value" id="user-id-overview">-</div>
+                  <div class="overview-label">شناسه کاربری</div>
+                </div>
+              </div>
+
+              <div class="overview-item">
+                <div class="overview-icon">
+                  <i class="fas fa-user-tag"></i>
+                </div>
+                <div class="overview-content">
+                  <div class="overview-value" id="upline-id-overview">-</div>
+                  <div class="overview-label">آپلاین</div>
+                </div>
+              </div>
+
+              <div class="overview-item">
+                <div class="overview-icon">
+                  <i class="fas fa-coins"></i>
+                </div>
+                <div class="overview-content">
+                  <div class="overview-value" id="miner-rewards-overview">0</div>
+                  <div class="overview-label">پاداش ماینر</div>
+                </div>
+              </div>
+
+              <div class="overview-item">
+                <div class="overview-icon">
+                  <i class="fas fa-gem"></i>
+                </div>
+                <div class="overview-content">
+                  <div class="overview-value" id="miner-status-overview">غیرفعال</div>
+                  <div class="overview-label">وضعیت ماینر</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- تب شبکه درختی -->
+      <div id="tree-tab" class="tab-content">
+        <div class="content-section">
+          <div class="section-header">
+            <h2><i class="fas fa-project-diagram"></i> شبکه درختی</h2>
+            <div class="tree-controls">
+              <button onclick="displayTree()" class="btn-secondary">
+                <i class="fas fa-sync-alt"></i>
+                بروزرسانی
+              </button>
+              <div class="level-selector">
+                <span>نمایش تا سطح:</span>
+                <select id="tree-level" onchange="displayTree()">
+                  <option value="3">3</option>
+                  <option value="4" selected>4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-container">
+            <div class="tree-stats-bar">
+              <div class="tree-stat">
+                <i class="fas fa-users"></i>
+                <span>کل اعضای شبکه:</span>
+                <strong id="total-members">0</strong>
+              </div>
+              <div class="tree-stat">
+                <i class="fas fa-layer-group"></i>
+                <span>سطح نمایش:</span>
+                <strong id="current-level">4</strong>
+              </div>
+              <div class="tree-stat">
+                <i class="fas fa-hard-hat"></i>
+                <span>ماینرهای فعال:</span>
+                <strong id="tree-miners">0</strong>
+              </div>
+            </div>
+
+            <div class="tree-wrapper">
+              <div id="tree" class="binary-tree">
+                <div class="empty-state">
+                  <div class="empty-icon">
+                    <i class="fas fa-sitemap"></i>
+                  </div>
+                  <h3>شبکه شما خالی است</h3>
+                  <p>پس از ثبت‌نام در سیستم، ساختار درختی شبکه شما اینجا نمایش داده خواهد شد</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- تب سیستم ماینر -->
+      <div id="miner-tab" class="tab-content">
+        <div class="content-section">
+          <div class="section-header">
+            <h2><i class="fas fa-miner"></i> سیستم ماینر</h2>
+            <div class="miner-global-status">
+              <div class="status-badge" id="global-miner-status">
+                <div class="status-dot"></div>
+                <span>در حال بررسی...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- انیمیشن ماینر -->
+          <div class="miner-visualization">
+            <div class="miner-scene">
+              <div class="miner-animation" id="miner-animation">
+                <!-- ماینر فعال -->
+                <div class="active-miner" id="active-miner" style="display: none;">
+                  <div class="miner-character">
+                    <div class="miner-head"></div>
+                    <div class="miner-body"></div>
+                    <div class="miner-arm left"></div>
+                    <div class="miner-arm right"></div>
+                    <div class="miner-pickaxe"></div>
+                  </div>
+                  <div class="mining-effects">
+                    <div class="spark spark-1"></div>
+                    <div class="spark spark-2"></div>
+                    <div class="spark spark-3"></div>
+                    <div class="ore-chunk"></div>
+                  </div>
+                  <div class="miner-ground"></div>
+                </div>
+
+                <!-- ماینر غیرفعال -->
+                <div class="inactive-miner" id="inactive-miner">
+                  <div class="sleeping-miner">
+                    <div class="miner-head"></div>
+                    <div class="miner-body"></div>
+                    <div class="sleep-z">Z</div>
+                    <div class="sleep-z z-2">Z</div>
+                    <div class="sleep-z z-3">Z</div>
+                  </div>
+                  <div class="miner-ground"></div>
+                </div>
+              </div>
+              
+              <div class="miner-stats-overlay">
+                <div class="miner-stat">
+                  <span>وضعیت:</span>
+                  <strong id="miner-visual-status">غیرفعال</strong>
+                </div>
+                <div class="miner-stat">
+                  <span>فعالیت:</span>
+                  <strong id="miner-activity">0%</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- کارت‌های وضعیت ماینر -->
+          <div class="miner-cards">
+            <div class="miner-status-card">
+              <div class="card-icon">
+                <i class="fas fa-user-hard-hat"></i>
+              </div>
+              <div class="card-content">
+                <h3>وضعیت ماینر شما</h3>
+                <div class="status-value" id="miner-status-value">غیرفعال</div>
+                <div class="status-description" id="miner-status-desc">شما در حال حاضر ماینر فعال نیستید</div>
+              </div>
+            </div>
+
+            <div class="miner-rewards-card">
+              <div class="card-icon">
+                <i class="fas fa-trophy"></i>
+              </div>
+              <div class="card-content">
+                <h3>پاداش‌های دریافتی</h3>
+                <div class="rewards-amount" id="miner-rewards-amount">0 PToken</div>
+                <div class="rewards-history">آخرین دریافت: <span id="last-reward">-</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- آمار ماینر -->
+          <div class="miner-stats-section">
+            <h3 class="section-subtitle">آمار لحظه‌ای ماینر</h3>
+            <div class="miner-stats-grid">
+              <div class="miner-stat-item">
+                <div class="stat-icon">
+                  <i class="fas fa-wallet"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-label">موجودی MATIC</div>
+                  <div class="stat-value" id="matic-balance">0</div>
+                </div>
+              </div>
+
+              <div class="miner-stat-item">
+                <div class="stat-icon">
+                  <i class="fas fa-coins"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-label">توکن موجود برای خرید</div>
+                  <div class="stat-value" id="available-tokens">0 PToken</div>
+                </div>
+              </div>
+
+              <div class="miner-stat-item">
+                <div class="stat-icon">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-label">ماینرهای فعال</div>
+                  <div class="stat-value" id="active-miners-count">0</div>
+                </div>
+              </div>
+
+              <div class="miner-stat-item">
+                <div class="stat-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-label">توزیع بعدی</div>
+                  <div class="stat-value" id="next-distribution-time">-</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- بخش تبدیل ارز -->
+          <div class="conversion-section">
+            <div class="conversion-card">
+              <div class="card-header">
+                <h3><i class="fas fa-exchange-alt"></i> تبدیل MATIC به توکن</h3>
+                <div class="conversion-rate">
+                  <span>نرخ تبدیل:</span>
+                  <strong>1 MATIC = 10 PToken</strong>
+                </div>
+              </div>
+              <div class="conversion-body">
+                <div class="input-group">
+                  <div class="input-with-icon">
+                    <i class="fas fa-coins"></i>
+                    <input type="number" id="matic-amount" placeholder="مقدار MATIC برای تبدیل" class="modern-input">
+                  </div>
+                  <button onclick="convertMaticToToken()" class="btn-convert">
+                    <i class="fas fa-bolt"></i>
+                    تبدیل فوری
+                  </button>
+                </div>
+                <div class="conversion-preview">
+                  <span>دریافت خواهید کرد:</span>
+                  <strong id="conversion-result">0 PToken</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- اقدامات ماینر -->
+          <div class="miner-actions">
+            <h3 class="section-subtitle">اقدامات سریع</h3>
+            <div class="action-buttons">
+              <button onclick="contributeToMiner()" class="btn-primary action-btn">
+                <i class="fas fa-donate"></i>
+                <span>خرید توکن ماینر</span>
+                <small>0.1 MATIC</small>
+              </button>
+
+              <button onclick="distributeMinerTokens()" class="btn-success action-btn">
+                <i class="fas fa-share-alt"></i>
+                <span>دریافت پاداش</span>
+                <small>توکن‌های شما</small>
+              </button>
+
+              <button onclick="donateToMinerPool()" class="btn-warning action-btn">
+                <i class="fas fa-gift"></i>
+                <span>اهدای MATIC</span>
+                <small>حمایت از استخر</small>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- تب برداشت سود -->
+      <div id="withdraw-tab" class="tab-content">
+        <div class="content-section">
+          <div class="section-header">
+            <h2><i class="fas fa-piggy-bank"></i> برداشت سود</h2>
+            <p>دریافت سود و پاداش‌های شما از سیستم</p>
+          </div>
+
+          <!-- کارت‌های برداشت -->
+          <div class="withdraw-cards">
+            <!-- استخر ویژه -->
+            <div class="withdraw-card special-pool">
+              <div class="card-header">
+                <div class="card-icon">
+                  <i class="fas fa-gem"></i>
+                </div>
+                <div class="card-title">
+                  <h3>استخر ویژه</h3>
+                  <p>تقسیم سود بین کاربران ویژه</p>
+                </div>
+                <div class="pool-badge">ویژه</div>
+              </div>
+
+              <div class="card-body">
+                <div class="amount-section">
+                  <div class="amount-display">
+                    <span class="amount" id="special-pool-amount">0</span>
+                    <span class="currency">MATIC</span>
+                  </div>
+                  <div class="amount-label">موجودی قابل برداشت</div>
+                </div>
+
+                <div class="distribution-info">
+                  <div class="info-row">
+                    <i class="fas fa-users"></i>
+                    <span>تعداد گیرندگان:</span>
+                    <strong id="special-receivers-count">0 نفر</strong>
+                  </div>
+                  <div class="info-row">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>سهم هر نفر:</span>
+                    <strong id="special-share-amount">0 MATIC</strong>
+                  </div>
+                  <div class="info-row">
+                    <i class="fas fa-user-check"></i>
+                    <span>وضعیت شما:</span>
+                    <strong id="special-eligibility">غیر واجد</strong>
+                  </div>
+                </div>
+
+                <div class="countdown-section">
+                  <div class="countdown-header">
+                    <i class="fas fa-clock"></i>
+                    <span>زمان باقی‌مانده تا برداشت:</span>
+                  </div>
+                  <div class="countdown-timer" id="special-countdown">
+                    <div class="time-unit">
+                      <span class="time-value" id="special-hours">00</span>
+                      <span class="time-label">ساعت</span>
+                    </div>
+                    <div class="time-separator">:</div>
+                    <div class="time-unit">
+                      <span class="time-value" id="special-minutes">00</span>
+                      <span class="time-label">دقیقه</span>
+                    </div>
+                    <div class="time-separator">:</div>
+                    <div class="time-unit">
+                      <span class="time-value" id="special-seconds">00</span>
+                      <span class="time-label">ثانیه</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button onclick="withdrawSpecials()" class="btn-withdraw-special" id="special-withdraw-btn" disabled>
+                  <i class="fas fa-download"></i>
+                  برداشت از استخر ویژه
+                </button>
+              </div>
+            </div>
+
+            <!-- استخر پاداش -->
+            <div class="withdraw-card reward-pool">
+              <div class="card-header">
+                <div class="card-icon">
+                  <i class="fas fa-wallet"></i>
+                </div>
+                <div class="card-title">
+                  <h3>استخر پاداش</h3>
+                  <p>برداشت سود روزانه</p>
+                </div>
+                <div class="pool-badge">عادی</div>
+              </div>
+
+              <div class="card-body">
+                <div class="amount-section">
+                  <div class="amount-display">
+                    <span class="amount" id="reward-pool-amount">0</span>
+                    <span class="currency">MATIC</span>
+                  </div>
+                  <div class="amount-label">موجودی استخر</div>
+                </div>
+
+                <div class="pool-stats">
+                  <div class="stat-item">
+                    <div class="stat-label">تعادل خورده:</div>
+                    <div class="stat-value" id="pool-consumed-balance">0</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">موجودی کل:</div>
+                    <div class="stat-value" id="pool-total-balance">0 MATIC</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-label">سهم شما:</div>
+                    <div class="stat-value" id="pool-user-share">0 MATIC</div>
+                  </div>
+                </div>
+
+                <div class="countdown-section">
+                  <div class="countdown-header">
+                    <i class="fas fa-history"></i>
+                    <span>زمان برداشت بعدی:</span>
+                  </div>
+                  <div class="countdown-timer" id="reward-countdown">
+                    <div class="time-unit">
+                      <span class="time-value" id="reward-hours">00</span>
+                      <span class="time-label">ساعت</span>
+                    </div>
+                    <div class="time-separator">:</div>
+                    <div class="time-unit">
+                      <span class="time-value" id="reward-minutes">00</span>
+                      <span class="time-label">دقیقه</span>
+                    </div>
+                    <div class="time-separator">:</div>
+                    <div class="time-unit">
+                      <span class="time-value" id="reward-seconds">00</span>
+                      <span class="time-label">ثانیه</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button onclick="withdrawPool()" class="btn-withdraw-reward" id="reward-withdraw-btn" disabled>
+                  <i class="fas fa-download"></i>
+                  برداشت از استخر پاداش
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- آمار برداشت -->
+          <div class="withdraw-stats">
+            <h3 class="section-subtitle">آمار برداشت‌های شما</h3>
+            <div class="stats-grid">
+              <div class="stat-card withdraw-stat">
+                <div class="stat-icon">
+                  <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-value" id="total-withdrawals">0 MATIC</div>
+                  <div class="stat-label">کل برداشت‌ها</div>
+                </div>
+              </div>
+
+              <div class="stat-card withdraw-stat">
+                <div class="stat-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-value" id="last-withdrawal-time">-</div>
+                  <div class="stat-label">آخرین برداشت</div>
+                </div>
+              </div>
+
+              <div class="stat-card withdraw-stat">
+                <div class="stat-icon">
+                  <i class="fas fa-calendar"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-value" id="next-withdrawal-time">-</div>
+                  <div class="stat-label">برداشت بعدی</div>
+                </div>
+              </div>
+
+              <div class="stat-card withdraw-stat">
+                <div class="stat-icon">
+                  <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-value" id="withdrawal-count">0</div>
+                  <div class="stat-label">تعداد برداشت</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- پیام‌های سیستمی -->
+  <div id="message-toast" class="message-toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
