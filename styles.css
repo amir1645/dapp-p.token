@@ -1,0 +1,505 @@
+/* استایل کلی */
+:root {
+  --primary: #6C63FF;
+  --primary-dark: #554fd8;
+  --primary-light: #8B85FF;
+  --secondary: #FF6584;
+  --accent: #36D1DC;
+  --success: #10B981;
+  --success-dark: #0DA36B;
+  --warning: #F59E0B;
+  --info: #3B82F6;
+  --dark: #0F0F23;
+  --darker: #0A0A18;
+  --dark-light: #1A1A2E;
+  --light: #FFFFFF;
+  --gray: #94A3B8;
+  --gray-dark: #64748B;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, var(--dark-light) 100%);
+  color: var(--light);
+  line-height: 1.6;
+  direction: rtl;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.mobile-container {
+  max-width: 100%;
+  min-height: 100vh;
+  background: var(--dark);
+  position: relative;
+}
+
+/* انیمیشن‌ها */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(107, 99, 255, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(107, 99, 255, 0.6); }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* هدر */
+.mobile-header {
+  background: linear-gradient(135deg, var(--dark-light) 0%, rgba(26, 26, 46, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+  box-shadow: 0 4px 15px rgba(107, 99, 255, 0.3);
+}
+
+.logo-text h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--light), var(--primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-subtitle {
+  font-size: 0.7rem;
+  color: var(--gray);
+  font-weight: 500;
+}
+
+.network-status .status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.network-status span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--success);
+}
+
+/* محتوای اصلی */
+.mobile-main {
+  padding: 20px;
+  padding-bottom: 80px;
+  min-height: calc(100vh - 140px);
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.mobile-section {
+  animation: slideIn 0.4s ease;
+}
+
+/* بخش کیف پول */
+.hero-section {
+  text-align: center;
+  padding: 40px 0 30px;
+}
+
+.hero-icon {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.floating-wallet {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 2rem;
+  color: white;
+  box-shadow: 0 10px 30px rgba(107, 99, 255, 0.3);
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-coin {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: var(--warning);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  color: white;
+  animation: float 2s ease-in-out infinite;
+}
+
+.floating-coin.coin-1 {
+  top: -10px;
+  left: 20%;
+  background: var(--success);
+  animation-delay: 0s;
+}
+
+.floating-coin.coin-2 {
+  top: -5px;
+  right: 20%;
+  background: var(--info);
+  animation-delay: 0.5s;
+}
+
+.floating-coin.coin-3 {
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--secondary);
+  animation-delay: 1s;
+}
+
+.hero-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--light), var(--primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+
+.action-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  margin-bottom: 20px;
+}
+
+/* دکمه‌ها */
+.btn-connect {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 18px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 8px 25px rgba(107, 99, 255, 0.3);
+}
+
+.btn-connect:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(107, 99, 255, 0.4);
+}
+
+.btn-glow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-connect:hover .btn-glow {
+  left: 100%;
+}
+
+.animated-btn {
+  animation: pulse 2s infinite;
+}
+
+.btn-disconnect {
+  background: rgba(255, 101, 132, 0.1);
+  color: var(--secondary);
+  border: 1px solid rgba(255, 101, 132, 0.2);
+  border-radius: 15px;
+  padding: 15px 24px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* کارت حساب */
+.account-display {
+  animation: fadeIn 0.6s ease;
+}
+
+.account-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.account-address {
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.account-balance {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.balance-label {
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+
+.balance-value {
+  color: var(--success);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* ناوبری پایین */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 15, 35, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.nav-item.active {
+  opacity: 1;
+}
+
+.nav-item.active .nav-icon {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  transform: translateY(-5px);
+}
+
+.nav-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+}
+
+.nav-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-label {
+  color: var(--primary-light);
+  font-weight: 600;
+}
+
+/* پیام‌ها */
+.message-toast {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  right: 20px;
+  background: var(--success);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  transform: translateY(-100px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 2000;
+}
+
+.message-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.message-toast.error {
+  background: var(--secondary);
+}
+
+.message-toast.info {
+  background: var(--info);
+}
+
+/* رسپانسیو */
+@media (max-width: 768px) {
+  .mobile-main {
+    padding: 15px;
+    padding-bottom: 80px;
+  }
+  
+  .hero-title {
+    font-size: 1.6rem;
+  }
+  
+  .action-card {
+    padding: 25px 20px;
+  }
+  
+  .btn-connect {
+    padding: 16px 20px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-header {
+    padding: 12px 15px;
+  }
+  
+  .logo-text h1 {
+    font-size: 1.2rem;
+  }
+  
+  .hero-section {
+    padding: 30px 0 20px;
+  }
+  
+  .floating-wallet {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
+  }
+  
+  .nav-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  
+  .nav-label {
+    font-size: 0.65rem;
+  }
+}
